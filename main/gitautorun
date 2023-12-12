@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# === HEADER ===
+#name: mygitrun
+#Description: Automated github script
+#=== Arguments ===
+#1. $1  Options
+#2. $2  commit message
+#3 $3  branch to push to eg main or master 
+#
+#Version : 0.1.0
+#License: MIT
+#Written : Gavin Lyons
+#Exit codes 0 all went well , 2-9 errors codes
+
+# === GLOBALS ===
+OPTIONS="$1"
+COMMIT_MESSAGE="$2"
+BRANCH_NAME="$3"
+
+# === FUNCTIONS ===
+
+function ExitFunc
+{
+	case "$1" in
+		0) printf "=== DONE === \n" ;;
+		2) printf ": Error2 :: Missing arguments \n";;
+		3) printf ": Error3 :: Commit message missing\n" ;;
+		4) printf ": Error4 :: Branch name missing\n";;
+		5) printf ": Error5 ::  git add \n";;
+		6) printf ": Error6 ::  git commit.\n";;
+		7) printf ": Error7 ::  git push. \n";;
+		8) printf  ": Error8 :: Unknown argument \n";;
+		9) printf ": Error9 :: Git not installed  \n";;
+		*) printf  ": ErrorX :: Unknown Error\n";;
+	esac
+	
+	exit "$1"
+}
+
+function CheckInputFunc
+{
+
+local VersionVar="0.1.0"
+local DateVar="$(date  +%d%b%y-%H%M)"
+
+# Check if users wants help or version
+case "$OPTIONS" in
+	-v|--version) #update system report 
+		printf "Version :: %s\n" "$VersionVar"
+		ExitFunc 0
+	;;
+	-h|--help) #update system report 
+		printf "Usage :: mygitrun argument_1 argument_2 argument_2 \n" 
+		printf "Argument 1 :: -c -v -h -a -m \n"
+		printf "Argument 2 :: Optional Commit message - \n"
+		printf "Argument 3 :: Optional branch name, eg master or main \n"
+		ExitFunc 0
+	;;
+	-a|--auto) #auto message
+		COMMIT_MESSAGE="Commit at $DateVar"
+		BRANCH_NAME=$(git status | head -1 | cut -d  ' ' -f3)
+	;;
+	-m|--manual)
+		#check for commit  , -z Returns true if string string is empty,
+		[ -z "$COMMIT_MESSAGE" ] && ExitFunc 3;  
+		#check for branch message, -z Returns true if string string is empty,
+		[ -z "$BRANCH_NAME" ] && ExitFunc 4; 
+	;;
+	-c|--commit)
+		#check for commit  , -z Returns true if string string is empty,
+		[ -z "$COMMIT_MESSAGE" ] && ExitFunc 3;  
+		# Branch name auto message
+		BRANCH_NAME=$(git status | head -1 | cut -d  ' ' -f3)
+	;;
+	*) ExitFunc 8;;	# unknown argument option
+esac
+
+}
+
+function GitWorkFunc
+{
+	# Git add
+	git add . ||   ExitFunc 5; 
+
+	# git commit
+	git commit -m "$COMMIT_MESSAGE"  ||  ExitFunc 6; 
+
+	# git push 
+	git push -u origin "$BRANCH_NAME" ||  { ExitFunc 7; }
+	
+	#auto login #TODO
+}
+
+# === MAIN CODE ===
+
+printf "%s\n" "=== START ==="
+
+#check if ANY arguments. 
+[[ "$#" = 0 ]] &&  ExitFunc 2
+#check if git installed
+command -v git >/dev/null 2>&1 ||  ExitFunc 9;
+#check the arguments given
+CheckInputFunc 
+# Git actions
+GitWorkFunc
+# Exit
+ExitFunc 0
+
+# === EOF ===

@@ -1,8 +1,3 @@
-Overview
-Installation
-Arguments
-Exit codes
-
 # gitAutoRun
 
 ## Overview
@@ -33,7 +28,7 @@ make install
 
 ## Usage
 
-Type in terminal, for options( -v , -h, -c, -d) see manpage for details
+Type in terminal
 
 ```sh
 gitautorun [options] [Commit message] [Branch name]
