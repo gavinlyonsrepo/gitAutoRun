@@ -17,7 +17,7 @@ all:
 	@echo Run \'make uninstall\' to uninstall $(PKGNAME).
 	
 install:
-	@echo 'START!'
+	@echo '=== START ==='
 	@echo 'Installing $(PKGNAME) ....' 
 	@echo 'Making directories...'
 	@mkdir -vp $(PREFIXPKG)
@@ -30,10 +30,10 @@ install:
 	@echo 'Installing Documentation ...'
 	@cp -vp README.md  $(PREFIXDOC)/$(PKGNAME)
 	
-	@echo 'DONE!'
+	@echo '=== DONE ==='
 
 uninstall:
-	@echo 'START!'
+	@echo '=== START ==='
 	@echo 'Uninstalling $(PKGNAME) ...'
 	
 	@echo 'Removing Script ...'
@@ -42,5 +42,5 @@ uninstall:
 	@echo 'Removing Documentation ...'
 	rm -vf $(PREFIXPKGDOC)/$(PKGNAME)/README.md
 	
-	@echo 'DONE!'
+	@echo '=== DONE ==='
 

@@ -87,9 +87,8 @@ function GitWorkFunc
 	git commit -m "$COMMIT_MESSAGE"  ||  ExitFunc 6; 
 
 	# git push 
-	git push -u origin "$BRANCH_NAME" ||  { ExitFunc 7; }
+	git push -u origin "$BRANCH_NAME" ||   ExitFunc 7; 
 	
-	#auto login #TODO
 }
 
 # === MAIN CODE ===
