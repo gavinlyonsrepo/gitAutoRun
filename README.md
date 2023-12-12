@@ -14,7 +14,6 @@
   * [Installation](#installation)
   * [Usage](#usage)
   * [Exit codes](#exit-codes)
-  * [Files and setup](#files-and-setup)
 
 
 ## Installation
@@ -53,7 +52,3 @@ gitautorun [options] [Commit message] [Branch name]
 | 7 | Error with git push command  |
 | 8 | Error Unknown argument  |
 | 9 | Error  git not installed |
-
-## Files and Setup
-
-### TODO
