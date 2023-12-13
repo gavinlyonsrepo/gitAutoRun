@@ -59,7 +59,7 @@ case "$ARGUMENTS" in
 	;;
 	-h|--help) #update system report 
 		printf "Usage :: mygitrun argument_1 argument_2 argument_2 \n" 
-		printf "Argument 1 :: -c -v -h -a -m \n"
+		printf "Argument 1 :: -v -h -a -m -s -c\n"
 		printf "Argument 2 :: Optional Commit message - \n"
 		printf "Argument 3 :: Optional branch name, eg master or main \n"
 		ExitFunc 0
@@ -81,8 +81,8 @@ case "$ARGUMENTS" in
 		# Branch name auto message
 		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
-	-s)
-		COMMIT_MESSAGE=$(CommitMsgSelectFunc)
+	-s| --select)
+		CommitMsgSelectFunc
 		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
 	*) ExitFunc 8;;	# unknown argument option
@@ -125,33 +125,23 @@ function CheckGitInstallFunc
 # Function to handle selecting commit message from menu
 function CommitMsgSelectFunc
 {
-	local choiceFsVar=""
-	local MessageVar=""
-	local optionsFsArr=("DateStamp" "TimeDateStamp" "Update Documents" "Update" "Exit")
 	printf "Commit message select menu :\n" 
+	local messageVar=""
+	local choiceFsVar=""
+	local optionsFsArr=("DateTimeStamp" "DateStamp" "Update Documents" "Update Project" "Exit")
 	select choiceFsVar in "${optionsFsArr[@]}"
 	do
 	case "$choiceFsVar" in
-		"${optionsFsArr[0]}")
-			echo "DateVar=$(date  +%d%b%y-%H%M)"
-		;;
-		"${optionsFsArr[1]}")
-			printf "%s\n" "=== START 2==="
-		;;
-		"${optionsFsArr[2]}")
-			printf "%s\n" "=== START 3==="
-		;;
-		"${optionsFsArr[3]}")
-			printf "%s\n" "=== START 4==="
-		;;
-		"${optionsFsArr[4]}")
-			ExitFunc 10
-		;;
-		*)  #exit  
-			ExitFunc 10
-		;;
+		"${optionsFsArr[0]}") messageVar="$(date  +%d%b%y-%H%M)" ;;
+		"${optionsFsArr[1]}") messageVar="$(date  +%d-%b-%y)" ;;
+		"${optionsFsArr[2]}") messageVar="Update Documents" ;;
+		"${optionsFsArr[3]}") messageVar="Update Project" ;;
+		"${optionsFsArr[4]}") ExitFunc 10 ;;
+		*)  ExitFunc 10 ;;
 	esac
+	break
 	done
+	COMMIT_MESSAGE="$messageVar"
 }
 # === MAIN CODE ===
 

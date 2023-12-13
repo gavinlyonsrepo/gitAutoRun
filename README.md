@@ -5,8 +5,8 @@
 ## Overview
 
 * Name: gitAutoRun
-* Description: Bash Script, Automated Git tasks.
-* Version: 0.1.0
+* Description: Bash Script to help with automation of commonly used  git operations.
+* Version: 0.1.0 Beta
 * License : MIT
 
 ## Table of contents
@@ -38,6 +38,7 @@ gitautorun [options] [Commit message] [Branch name]
 | -a --auto | Automatically fill in Commit and branch name |
 | -m --manual  | Take Commit message and branch name from command line arguments  |
 | -c --commit  | Take Commit msg from cmd line arguments  & Automatically fill in  branch name |
+| -s --select | Take Commit msg from menu selection & Automatically fill in  branch name |
 
 ## Exit codes
 
@@ -52,3 +53,5 @@ gitautorun [options] [Commit message] [Branch name]
 | 7 | Error with git push command  |
 | 8 | Error Unknown argument  |
 | 9 | Error  git not installed |
+| 10 | Error  User exited Commit message selection |
+| 11 | Error Current directory is not a Git Repository |
