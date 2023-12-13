@@ -2,8 +2,8 @@
 
 # === HEADER ===
 #name: mygitrun
-#Description: Automated github script
-#=== Arguments ===
+#Description: Automated github script for git operations. 
+#Arguments::-
 #1. $1  Options
 #2. $2  commit message
 #3 $3  branch to push to eg main or master 
@@ -11,14 +11,17 @@
 #Version : 0.1.0
 #License: MIT
 #Written : Gavin Lyons
-#Exit codes 0 all went well , 2-9 errors codes
+#URL : https://github.com/gavinlyonsrepo/gitAutoRun
+#Exit codes 0 all went well , 2-11 errors codes
+#=================
 
-# === Save Arguments ===
+# === GLOBALS VARS ===
+# Save Arguments ::-
 ARGUMENTS="$1"
 COMMIT_MESSAGE="$2"
 BRANCH_NAME="$3"
 
-# Prompt for select menus
+# Prompt for select menu
 PS3="By your command:"
 
 # === FUNCTIONS ===
@@ -53,11 +56,11 @@ local DateVar=""
 
 # Check if users wants help or version
 case "$ARGUMENTS" in
-	-v|--version) #update system report 
+	-v|--version) # print version and exit
 		printf "Version :: %s\n" "$VersionVar"
 		ExitFunc 0
 	;;
-	-h|--help) #update system report 
+	-h|--help) # print help and exit 
 		printf "Usage :: mygitrun argument_1 argument_2 argument_2 \n" 
 		printf "Argument 1 :: -v -h -a -m -s -c\n"
 		printf "Argument 2 :: Optional Commit message - \n"
@@ -69,19 +72,19 @@ case "$ARGUMENTS" in
 		COMMIT_MESSAGE="Commit at $DateVar"
 		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
-	-m|--manual)
+	-m|--manual) # Users manually enters commit msg and branch name
 		#check for commit  , -z Returns true if string string is empty,
 		[ -z "$COMMIT_MESSAGE" ] && ExitFunc 3;  
 		#check for branch message, -z Returns true if string string is empty,
 		[ -z "$BRANCH_NAME" ] && ExitFunc 4; 
 	;;
-	-c|--commit)
+	-c|--commit) # Users manually enters commit msg  only
 		#check for commit  , -z Returns true if string string is empty,
 		[ -z "$COMMIT_MESSAGE" ] && ExitFunc 3;  
 		# Branch name auto message
 		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
-	-s| --select)
+	-s| --select) # Users select commit msg from menu. 
 		CommitMsgSelectFunc
 		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
@@ -95,10 +98,8 @@ function GitWorkFunc
 {
 	# Git add
 	git add . ||   ExitFunc 5; 
-
 	# git commit
 	git commit -m "$COMMIT_MESSAGE"  ||  ExitFunc 6; 
-
 	# git push 
 	git push -u origin "$BRANCH_NAME" ||   ExitFunc 7; 
 	
