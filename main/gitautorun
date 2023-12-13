@@ -13,13 +13,17 @@
 #Written : Gavin Lyons
 #Exit codes 0 all went well , 2-9 errors codes
 
-# === GLOBALS ===
-OPTIONS="$1"
+# === Save Arguments ===
+ARGUMENTS="$1"
 COMMIT_MESSAGE="$2"
 BRANCH_NAME="$3"
 
+# Prompt for select menus
+PS3="By your command:"
+
 # === FUNCTIONS ===
 
+# Function to handle the program exit and exit codes. 
 function ExitFunc
 {
 	case "$1" in
@@ -32,20 +36,23 @@ function ExitFunc
 		7) printf ": Error7 ::  git push. \n";;
 		8) printf  ": Error8 :: Unknown argument \n";;
 		9) printf ": Error9 :: Git not installed  \n";;
+		10) printf ": Error10 :: user exited Commit message selection \n";;
+		11) printf ": Error11 :: Current directory is not a Git Repository \n";;
 		*) printf  ": ErrorX :: Unknown Error\n";;
 	esac
 	
 	exit "$1"
 }
 
+# Function to handle user input arguments
 function CheckInputFunc
 {
 
 local VersionVar="0.1.0"
-local DateVar="$(date  +%d%b%y-%H%M)"
+local DateVar=""
 
 # Check if users wants help or version
-case "$OPTIONS" in
+case "$ARGUMENTS" in
 	-v|--version) #update system report 
 		printf "Version :: %s\n" "$VersionVar"
 		ExitFunc 0
@@ -58,8 +65,9 @@ case "$OPTIONS" in
 		ExitFunc 0
 	;;
 	-a|--auto) #auto message
+		DateVar="$(date  +%d%b%y-%H%M)"
 		COMMIT_MESSAGE="Commit at $DateVar"
-		BRANCH_NAME=$(git status | head -1 | cut -d  ' ' -f3)
+		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
 	-m|--manual)
 		#check for commit  , -z Returns true if string string is empty,
@@ -71,13 +79,18 @@ case "$OPTIONS" in
 		#check for commit  , -z Returns true if string string is empty,
 		[ -z "$COMMIT_MESSAGE" ] && ExitFunc 3;  
 		# Branch name auto message
-		BRANCH_NAME=$(git status | head -1 | cut -d  ' ' -f3)
+		BRANCH_NAME=$(AutoBranchNameFunc)
+	;;
+	-s)
+		COMMIT_MESSAGE=$(CommitMsgSelectFunc)
+		BRANCH_NAME=$(AutoBranchNameFunc)
 	;;
 	*) ExitFunc 8;;	# unknown argument option
 esac
 
 }
 
+# Function to work with git
 function GitWorkFunc
 {
 	# Git add
@@ -91,15 +104,66 @@ function GitWorkFunc
 	
 }
 
+# Function to automatically name branch to current branch
+function AutoBranchNameFunc
+{
+	git status | head -1 | cut -d  ' ' -f3
+}
+
+# Function to check if directory is a git repository  
+function CheckGitDirFunc
+{
+	[ -d ".git" ] || ExitFunc 11
+}
+
+# Function to check if git is installed 
+function CheckGitInstallFunc
+{
+	command -v git >/dev/null 2>&1 ||  ExitFunc 9;
+}
+
+# Function to handle selecting commit message from menu
+function CommitMsgSelectFunc
+{
+	local choiceFsVar=""
+	local MessageVar=""
+	local optionsFsArr=("DateStamp" "TimeDateStamp" "Update Documents" "Update" "Exit")
+	printf "Commit message select menu :\n" 
+	select choiceFsVar in "${optionsFsArr[@]}"
+	do
+	case "$choiceFsVar" in
+		"${optionsFsArr[0]}")
+			echo "DateVar=$(date  +%d%b%y-%H%M)"
+		;;
+		"${optionsFsArr[1]}")
+			printf "%s\n" "=== START 2==="
+		;;
+		"${optionsFsArr[2]}")
+			printf "%s\n" "=== START 3==="
+		;;
+		"${optionsFsArr[3]}")
+			printf "%s\n" "=== START 4==="
+		;;
+		"${optionsFsArr[4]}")
+			ExitFunc 10
+		;;
+		*)  #exit  
+			ExitFunc 10
+		;;
+	esac
+	done
+}
 # === MAIN CODE ===
 
 printf "%s\n" "=== START ==="
 
-#check if ANY arguments. 
+# check if ZERO arguments. 
 [[ "$#" = 0 ]] &&  ExitFunc 2
-#check if git installed
-command -v git >/dev/null 2>&1 ||  ExitFunc 9;
-#check the arguments given
+# check if git installed
+CheckGitInstallFunc
+# check if git directory 
+CheckGitDirFunc
+# check the arguments given
 CheckInputFunc 
 # Git actions
 GitWorkFunc
