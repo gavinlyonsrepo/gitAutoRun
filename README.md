@@ -18,9 +18,13 @@
 
 ## Installation
 
-Install locally by makefile on Linux OS. uninstall option provided. 
+Download from github using curl and zip and then Install locally by makefile on Linux OS. uninstall option also provided. 
 
 ```sh
+cd ~/Downloads
+curl -L -O https://github.com/gavinlyonsrepo/gitAutoRun/archive/main.zip 
+unzip main.zip  
+cd gitAutoRun-main
 make install
 ```
 
@@ -29,7 +33,7 @@ make install
 Type in terminal
 
 ```sh
-gitautorun [options] [Commit message] [Branch name]
+gitautorun [options flags] [Commit message] [Branch name]
 ```
 | Option flag | Description |
 | --- | ---|
