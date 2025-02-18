@@ -5,17 +5,18 @@
 # Options:
 # 1. make install
 # 2. make uninstall
+# 3. make help
 
 
 PREFIXPKG ?= $(HOME)/.local/bin
 PREFIXDOC ?= $(HOME)/.local/share/doc
 PKGNAME = gitautorun
 
+.PHONY: all
 all:
-	@echo Run \'make install\' to install $(PKGNAME).
-	@echo 'or'
-	@echo Run \'make uninstall\' to uninstall $(PKGNAME).
-	
+	@echo Run \'make help\' for options
+
+.PHONY: install
 install:
 	@echo '=== START ==='
 	@echo 'Installing $(PKGNAME) ....' 
@@ -32,6 +33,8 @@ install:
 	
 	@echo '=== DONE ==='
 
+
+.PHONY: uninstall
 uninstall:
 	@echo '=== START ==='
 	@echo 'Uninstalling $(PKGNAME) ...'
@@ -44,3 +47,12 @@ uninstall:
 	
 	@echo '=== DONE ==='
 
+
+# Help task , explains the options you can use
+.PHONY: help
+help:
+	@echo '[HELP!]'
+	@echo "make install   - Installs " $(PKGNAME)  " to " $(PREFIXPKG)
+	@echo "make uninstall - Uninstalls " $(PKGNAME)
+	@echo "make help      - Prints help message"
+	@echo '***************'

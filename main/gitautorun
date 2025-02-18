@@ -129,7 +129,7 @@ function CommitMsgSelectFunc
 	printf "Commit message select menu :\n" 
 	local messageVar=""
 	local choiceFsVar=""
-	local optionsFsArr=("DateTimeStamp" "DateStamp" "Update Documents" "Update Project" "Exit")
+	local optionsFsArr=("DateTimeStamp" "DateStamp" "Update Documents" "Update Project" "Update Comments" "Update API"  "Exit")
 	select choiceFsVar in "${optionsFsArr[@]}"
 	do
 	case "$choiceFsVar" in
@@ -137,7 +137,9 @@ function CommitMsgSelectFunc
 		"${optionsFsArr[1]}") messageVar="$(date  +%d-%b-%y)" ;;
 		"${optionsFsArr[2]}") messageVar="Update Documents" ;;
 		"${optionsFsArr[3]}") messageVar="Update Project" ;;
-		"${optionsFsArr[4]}") ExitFunc 10 ;;
+		"${optionsFsArr[4]}") messageVar="Update Comments" ;;
+		"${optionsFsArr[5]}") messageVar="Update API" ;;
+		"${optionsFsArr[6]}") ExitFunc 10 ;;
 		*)  ExitFunc 10 ;;
 	esac
 	break
